@@ -23,3 +23,9 @@ python -m unittest discover -s tests -v
 ## Reporting security issues
 
 Do not open a public issue. Use GitHub's **Security → Report a vulnerability** (private advisory) on this repository.
+
+## Releasing
+
+1. Bump `versions` in `app_spaces/info.json` and add a `CHANGELOG.md` entry.
+2. Commit, then tag and push: `git tag v<version> && git push origin v<version>`.
+3. The Release workflow tests, builds `app_spaces-<version>.zip` (+ `.sha256`) and publishes a GitHub Release.

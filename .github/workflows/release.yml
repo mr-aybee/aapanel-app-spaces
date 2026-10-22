@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tag matches plugin version
+        run: |
+          version=$(python -c "import json;print(json.load(open('app_spaces/info.json'))['versions'])")
+          [ "v$version" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match info.json version $version"; exit 1; }
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Generated UI is up to date
+        run: |
+          python tools/assemble_ui.py
+          git diff --exit-code -- app_spaces/index.html app_spaces/workspace.html preview/index.html
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Build package
+        run: |
+          python tools/build.py
+          cd dist && sha256sum "app_spaces-$VERSION.zip" > "app_spaces-$VERSION.zip.sha256"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/app_spaces-$VERSION.zip dist/app_spaces-$VERSION.zip.sha256 \
+            --title "App Spaces $GITHUB_REF_NAME" --generate-notes
