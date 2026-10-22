@@ -1,0 +1,46 @@
+<div id="appspaces-launcher" style="padding:26px;font:14px/1.6 system-ui;color:inherit">
+
+  <h2 style="margin:0 0 10px">App Spaces</h2>
+
+  <p id="appspaces-launch-status">Opening App Spaces in a new tabâ€¦</p>
+
+  <button id="appspaces-launch-button" type="button" style="padding:9px 18px;background:#31815b;color:white;border:0;border-radius:5px;cursor:pointer">Open App Spaces â†—</button>
+
+</div>
+
+<script>
+
+(function(){
+
+ const root=document.getElementById('appspaces-launcher');
+
+ const status=root.querySelector('#appspaces-launch-status');
+
+ const url='/app-spaces';
+
+ let csrf=null,child=null,pending=null;
+
+ function bootstrap(){if(pending)return pending;pending=new Promise((resolve,reject)=>jQuery.ajax({type:'POST',url:'/plugin?action=a&name=app_spaces&s=api',data:{payload:JSON.stringify({operation:'bootstrap'})},dataType:'json',timeout:15000,success:r=>r&&r.status?resolve(r.data.csrf):reject(Error(r?.msg||'Panel authentication failed')),error:()=>reject(Error('Could not authenticate. Refresh aaPanel and try again.'))}));return pending;}
+
+ function send(){if(child&&!child.closed&&csrf){try{if(child.location.origin===location.origin||child.location.href==='about:blank')child.sessionStorage.setItem('app-spaces-csrf',csrf);}catch(e){}child.postMessage({type:'APP_SPACES_BOOTSTRAP',csrf},location.origin);}}
+
+ const receive=e=>{if(e.origin===location.origin&&e.source===child&&e.data?.type==='APP_SPACES_READY')send();};
+
+ window.addEventListener('message',receive);
+
+ async function launch(){child=window.open(url,'aaPanel-App-Spaces');if(!child){status.textContent='Your browser blocked the automatic tab. Click Open App Spaces to continue.';return;}status.textContent='App Spaces is open in its own tab. You can close this launcher.';try{csrf=await bootstrap();send();child.focus();}catch(e){status.textContent=e.message;pending=null;}}
+
+ root.querySelector('#appspaces-launch-button').onclick=launch;
+
+ // Fetch the session token before the user presses the fallback button, without exposing it in the URL.
+
+ bootstrap().then(token=>{csrf=token;send();}).catch(e=>{status.textContent=e.message;pending=null;});
+
+ launch();
+
+ const cleanup=new MutationObserver(()=>{if(!document.contains(root)){window.removeEventListener('message',receive);cleanup.disconnect();}});cleanup.observe(document.body,{childList:true,subtree:true});
+
+}());
+
+</script>
+

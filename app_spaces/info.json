@@ -1,0 +1,18 @@
+{
+
+  "title": "App Spaces",
+
+  "name": "app_spaces",
+
+  "ps": "Application namespaces for systemd and Docker, with aaPanel proxy associations",
+
+  "versions": "0.0.1",
+
+  "checks": "/www/server/panel/plugin/app_spaces/app_spaces_main.py",
+
+  "author": "Orbyn Technologies",
+
+  "home": "https://orbyntech.com"
+
+}
+

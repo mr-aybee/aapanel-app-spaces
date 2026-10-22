@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+dist/
+app_spaces/data/
+test-results/
+
+.DS_Store
+node_modules/
+.vscode/
+.idea/
