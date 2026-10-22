@@ -16,9 +16,9 @@ js = (plugin / 'editor_ui.js').read_text(encoding='utf-8') + '\n' + (plugin / 'u
 
 fragment = '<style>\n' + css + '\n</style>\n' + markup + '\n<script>\n' + js + '\n</script>\n'
 
-version=json.loads((plugin/'info.json').read_text())['versions']
+version=json.loads((plugin/'info.json').read_text(encoding='utf-8'))['versions']
 
-(plugin/'index.html').write_text((plugin/'launcher.html').read_text().replace('__APP_SPACES_VERSION__',version),encoding='utf-8')
+(plugin/'index.html').write_text((plugin/'launcher.html').read_text(encoding='utf-8').replace('__APP_SPACES_VERSION__',version),encoding='utf-8')
 
 (plugin/'workspace.html').write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>App Spaces</title><style>body{margin:0;background:#17191e}</style></head><body>'+fragment+'</body></html>',encoding='utf-8')
 
