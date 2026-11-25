@@ -182,3 +182,7 @@ Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) fi
 ## License
 
 [MIT](LICENSE) © Orbyn Technologies
+
+## Evaluating changes
+
+Use a disposable aaPanel host for integration testing, especially service lifecycle operations, configuration edits and rollback. Review [installation](INSTALL.md) and [contribution guidance](CONTRIBUTING.md) before making changes. The repository includes automated workflows and a `tests/` directory; consult their results for the revision you intend to deploy.
