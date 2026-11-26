@@ -179,6 +179,10 @@ CI runs the assembly check, the unit tests and the package build on every push. 
 
 Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating you agree to uphold it.
+
 ## License
 
 [MIT](LICENSE) © Orbyn Technologies
